@@ -62,6 +62,7 @@ def syncStates():
     outport.send(Message.from_hex(f'90 {pvwin[pvwcam -1]} 15'))
 
 #Eventのログを表示
+#たぶん，非同期処理がなくともOK?
 def onConnectAttempt(params: Dict[Any, Any]) -> None:
     """Called when a connection is attempted"""
 
