@@ -168,8 +168,9 @@ if args.ip is not None :
 else:
     atem_scan()
     atem_connect(input('Input IP address'))
-initialize()
 
+
+initialize()
 
 #MIDIパッドからの入力をATEMに反映
 while True:
