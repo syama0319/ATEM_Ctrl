@@ -22,16 +22,16 @@ switcher = PyATEMMax.ATEMMax()
 #LaunchpadとATEMのボタン対応
 pvwin = ('51','52','53','54','55','56','57','58','47','48')
 pgmin = ('3D','3E','3F','40','41','42','43','44','33','34')
-#colは Black ColorBars Colorの順
-pvwcol = ('35','36','37')
-pgmcol = ('49','4A','4B')
-pvwmp = ('39','3A')
-pgmmp = ('4D','4E')
+cols = ('black', 'colorBars', 'color1', 'color2', 'mediaPlayer1', 'mediaPlayer2')
+pvwcol = ('35','36','37','39','3A') #colは Black ColorBars Color mediaPlayer1 mediaPlayer2の順
+pgmcol = ('49','4A','4B','4D','4E')
 ftb = '4F'
 cutme = '0C'
 autome = '0E'
 me = ('22','23','24','25','26')
 pvwtrans = '0E'
+mp1 = ('15', '16', '17') #mpはTIE, ON AIR, AUTOの順
+mp2 = ('0B', '0C', '0D')
 
 #MIDIのポート設定
 # ports = mido.open_output('Launchpad X LPX MIDI In')
@@ -52,7 +52,7 @@ else:
     inport = mido.open_input(ports_i[port_in])
 
 #ATEMの状態を取得
-def syncStates():
+def syncStatus():
     pgmcam = switcher.programInput[0].videoSource
     pvwcam = switcher.previewInput[0].videoSource
     #ボタンを光らせる
@@ -61,7 +61,7 @@ def syncStates():
     #PRVボタン
     outport.send(Message.from_hex(f'90 {pvwin[pvwcam -1]} 15'))
 
-#Eventのログを表示
+###########   Eventのログを表示   ###########
 #たぶん，非同期処理がなくともOK?
 def onConnectAttempt(params: Dict[Any, Any]) -> None:
     """Called when a connection is attempted"""
@@ -82,7 +82,7 @@ def onReceive(params: Dict[Any, Any]) -> None:
     """Called when data is received from the switcher"""
 
     print(f"[{time.ctime()}] Received [{params['cmd']}]: {params['cmdName']}")
-    syncStates()
+    syncStatus()
 
 
 def onWarning(params: Dict[Any, Any]) -> None:
@@ -96,7 +96,7 @@ switcher.registerEvent(switcher.atem.events.disconnect, onDisconnect)
 switcher.registerEvent(switcher.atem.events.receive, onReceive)
 switcher.registerEvent(switcher.atem.events.warning, onWarning)
 
-#ATEMへ接続
+###########   ATEMへ接続   ###########
 ips = 0
 #LAN内のATEMスキャン
 def atem_scan():
@@ -142,15 +142,12 @@ def initialize():
     #Novationのロゴを光らせる
     outport.send(Message.from_hex('90 63 03'))
     for i in range(len(pgmin)):
-        outport.send(Message.from_hex('90 '+pvwin[i]+' 03'))
-        outport.send(Message.from_hex('90 '+pgmin[i]+' 03'))
+        outport.send(Message.from_hex('90 '+pvwin[i]+' 15'))
+        outport.send(Message.from_hex('90 '+pgmin[i]+' 05'))
     for i in range(len(pgmcol)):
-        outport.send(Message.from_hex('90 '+pvwcol[i]+' 03'))
-        outport.send(Message.from_hex('90 '+pgmcol[i]+' 03'))
-    for i in range(len(pvwmp)):
-        outport.send(Message.from_hex('90 '+pvwmp[i]+' 03'))
-        outport.send(Message.from_hex('90 '+pgmin[i]+' 03'))
-    outport.send(Message.from_hex('F0 00 20 29 02 0C 03 00 '+ftb+' 04 00 '+cutme+' 03 00 '+autome+' 03 00 '+pvwtrans+' 24'))
+        outport.send(Message.from_hex('90 '+pvwcol[i]+' 17'))
+        outport.send(Message.from_hex('90 '+pgmcol[i]+' 07'))
+    outport.send(Message.from_hex('F0 00 20 29 02 0C 03 00 '+ftb+' 05 00 '+cutme+' 09 00 '+autome+' 09 00 '+pvwtrans+' 22'))
 
 #終了時にやること
 def end_seq():
@@ -165,7 +162,7 @@ def end_seq():
     print(f"[{time.ctime()}] BYE!")
     quit()
 
-#実行時にipを入れればScan()はスキップされる
+#実行時にipを入れればatem_scan()はスキップされる
 if args.ip is not None :
     switcher.connect(args.ip)
 else:
@@ -181,7 +178,11 @@ while True:
         num = pgmin.index(msgh) +1
         switcher.setProgramInputVideoSource(0, num)
         print(f"[{time.ctime()}]  PGM Video source: {num}")
-    if msgh[1] in pvwin:
+    elif msgh[1] in pvwin:
         num = pvwin.index(msgh) +1
         switcher.setProgramInputVideoSource(0, num)
         print(f"[{time.ctime()}]  PVW Video source: {num}")
+    elif msgh[1] in pgmcol:
+        switcher.setProgramInputVideoSource(0, pgmcol[num])
+    elif msgh[1] in pvwcol:
+        switcher.setProgramInputVideoSource(0, pvwcol[num])
