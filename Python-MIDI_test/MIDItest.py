@@ -9,19 +9,20 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-m', '--model', help='MIDI pad model (ex: X)')
 args = parser.parse_args()
 
-#LaunchpadとATEMのボタン対応
-pvwin = ('51','52','53','54','55','56','57','58','47','48')
-pgmin = ('3D','3E','3F','40','41','42','43','44','33','34')
-#colは Black ColorBars Colorの順
-pvwcol = ('35','36','37')
-pgmcol = ('49','4A','4B')
-pvwmp = ('39','3A')
-pgmmp = ('4D','4E')
-ftb = '4F'
-cutme = '0C'
-autome = '0E'
-me = ('22','23','24','25','26')
-pvwtrans = '0E'
+pvwin = ('33','34','35','36','37','29','2A','2B','2C','2D')
+pgmin = ('51','52','53','54','55','47','48','49','4A','4B')
+inputs = ('input1', 'input2', 'input3', 'input4', 'input5', 'input6', 'input7', 'input8', 'input9', 'input10')
+cols = ('black', 'colorBars', 'color1', 'color2', 'mediaPlayer1', 'mediaPlayer2')
+pvwcol = ('3B','31','2F','30','39','3A') #colは Black ColorBars Color mediaPlayer1 mediaPlayer2の順
+pgmcol = ('59','4F','4D','4E','57','58')
+ftb = '45'
+cutme = '10'
+autome = '12'
+me = ('19','1A','1B','1C','1D')
+mes = ('mix','dip','wipe','sting','dVE')
+pvwtrans = '13'
+mp1 = ('15', '16', '17') #mpはTIE, ON AIR, AUTOの順
+mp2 = ('0B', '0C', '0D')
 
 
 if args.model is not None:
@@ -70,15 +71,25 @@ def initialize():
         outport.send(Message('note_on', channel = 0, note = i, velocity = 0))
     #Novationのロゴを光らせる
     outport.send(Message.from_hex('90 63 03'))
-    for i in range(len(pgmin)):
-        outport.send(Message.from_hex('90 '+pvwin[i]+' 03'))
-        outport.send(Message.from_hex('90 '+pgmin[i]+' 03'))
+    for i in pvwin:
+        outport.send(Message.from_hex('90 '+ i +' 15'))
+    for i in pgmin:
+        outport.send(Message.from_hex('90 '+ i +' 05'))
     for i in range(len(pgmcol)):
-        outport.send(Message.from_hex('90 '+pvwcol[i]+' 03'))
-        outport.send(Message.from_hex('90 '+pgmcol[i]+' 03'))
-    for i in range(len(pvwmp)):
-        outport.send(Message.from_hex('90 '+pvwmp[i]+' 03'))
-        outport.send(Message.from_hex('90 '+pgmin[i]+' 03'))
+        outport.send(Message.from_hex('90 '+pvwcol[i]+' 18'))
+        outport.send(Message.from_hex('90 '+pgmcol[i]+' 04'))
+    for i in me:
+        outport.send(Message.from_hex('90 '+ i +' 0C'))
+    outport.send(Message.from_hex('91 '+ftb+' 05'))
+    outport.send(Message.from_hex('90 '+cutme+' 09'))
+    outport.send(Message.from_hex('90 '+autome+' 09'))
+    outport.send(Message.from_hex('90 '+pvwtrans+' 22'))
+    outport.send(Message.from_hex('90 '+mp1[0]+' 0C'))
+    outport.send(Message.from_hex('90 '+mp1[1]+' 05'))
+    outport.send(Message.from_hex('90 '+mp1[2]+' 05'))
+    outport.send(Message.from_hex('90 '+mp2[0]+' 0C'))
+    outport.send(Message.from_hex('90 '+mp2[1]+' 05'))
+    outport.send(Message.from_hex('90 '+mp2[2]+' 05'))
     
 initialize()
 

@@ -52,7 +52,7 @@ def initialize():
 
 def Color():
     for i in range(1, 89):
-        msg = Message('note_on', channel = 0, note = i + 10, velocity = i)
+        msg = Message('note_on', channel = 0, note = i + 10, velocity = i+38)
         outport.send(msg)
         print(f'[{time.ctime()}] {msg}')
         time.sleep(0.02)
@@ -64,12 +64,14 @@ while True:
     try:
         msg = inport.receive().hex().split()
         print(msg)
-        if(msg[2] != '00'):
+        if msg[2] != '00':
             msg[2] = '15'
         outport.send(Message.from_hex(' '.join(msg)))
-        if(msg[0] == 'B0'):
+        if msg[0] == 'B0':
             outport.send(Message.from_hex('80 12 00'))
-        if(msg[1] == '0B'):
+        if msg[1] == '0C':
+            Color()
+        if msg[1] == '0B':
             #Launchpad XのLive Mode化
             outport.send(Message.from_hex('F0 00 20 29 02 0C 0E 00 F7'))
             outport.send(Message.from_hex('F0 00 20 29 02 0C 0B 00 01 F7'))
