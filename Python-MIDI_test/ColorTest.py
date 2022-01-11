@@ -52,10 +52,10 @@ def initialize():
 
 def Color():
     for i in range(1, 89):
-        msg = Message('note_on', channel = 0, note = i + 10, velocity = i+38)
+        msg = Message('note_on', channel = 0, note = i + 10, velocity = i)
         outport.send(msg)
         print(f'[{time.ctime()}] {msg}')
-        time.sleep(0.02)
+        time.sleep(0.01)
     
 initialize()
 Color()

@@ -208,6 +208,8 @@ def initialize():
     print(f"[{time.ctime()}] Initializing MIDI pad...")
     #Launchpad XのProgrammer Mode化
     outport.send(Message.from_hex('F0 00 20 29 02 0C 0E 01 F7'))
+    #Launchpad XのVelocity無効化
+    outport.send(Message.from_hex('F0 00 20 29 02 0C 04 03 7F F7'))
     #Launchpad XのAftertouch無効化
     outport.send(Message.from_hex('F0 00 20 29 02 0C 0B 02 01 F7'))
     #Launchpad XのLED有効化
@@ -237,44 +239,46 @@ initialize()
 #MIDIパッドからの入力をATEMに反映
 while True:
     msgh = inport.receive().hex().split()
-    if msgh[1] in pgmin:
-        num = pgmin.index(msgh[1]) +1
-        switcher.setProgramInputVideoSource(0, num)
-        print(f"[{time.ctime()}]  PGM Video source: {num}")
-    elif msgh[1] in pvwin:
-        num = pvwin.index(msgh[1]) +1
-        switcher.setPreviewInputVideoSource(0, num)
-        print(f"[{time.ctime()}]  PVW Video source: {num}")
-    elif msgh[1] in pgmcol:
-        num = pgmcol.index(msgh[1])
-        switcher.setProgramInputVideoSource(0, cols[num])
-        print(f"[{time.ctime()}]  PGM Video source: " + cols[num])
-    elif msgh[1] in pvwcol:
-        num = pvwcol.index(msgh[1])
-        switcher.setPreviewInputVideoSource(0, cols[num])
-        print(f"[{time.ctime()}]  PVW Video source: " + cols[num])
-    elif msgh[1] in me:
-        num = me.index(msgh[1])
-        switcher.setTransitionStyle(0, mes[num])
-    elif msgh[1] == ftb:
-        if switcher.fadeToBlack[0].state.fullyBlack == False and switcher.fadeToBlack[0].state.inTransition:
-            switcher.execFadeToBlackME(1)
-            outport.send(Message.from_hex('91 '+ftb+' 05'))
-    elif msgh[1] == autome:
-        switcher.execAutoME(0)
-    elif msgh[1] == cutme:
-        switcher.execCutME(0)
-    elif msgh[1] in mpties:
-        num = mpties.index(msgh[1])
-        mptie[num] != mptie[num]
-        switcher.setDownstreamKeyerTie(dsks[num], mptie[num])
-    elif msgh[1] in mpairs:
-        num = mpairs.index(msgh[1])
-        mpair[num] != mpair[num]
-        switcher.setDownstreamKeyerTie(dsks[num], mpair[num])
-    elif msgh[1] in mpautos:
-        num = mpautos.index(msgh[1])
-        mpautos[num] != mpauto[num]
-        switcher.setDownstreamKeyerTie(dsks[num], mpauto[num])
+    #ボタンを離したときは無視する
+    if msgh[2] != '00':
+        if msgh[1] in pgmin:
+            num = pgmin.index(msgh[1]) +1
+            switcher.setProgramInputVideoSource(0, num)
+            print(f"[{time.ctime()}]  PGM Video source: {num}")
+        elif msgh[1] in pvwin:
+            num = pvwin.index(msgh[1]) +1
+            switcher.setPreviewInputVideoSource(0, num)
+            print(f"[{time.ctime()}]  PVW Video source: {num}")
+        elif msgh[1] in pgmcol:
+            num = pgmcol.index(msgh[1])
+            switcher.setProgramInputVideoSource(0, cols[num])
+            print(f"[{time.ctime()}]  PGM Video source: " + cols[num])
+        elif msgh[1] in pvwcol:
+            num = pvwcol.index(msgh[1])
+            switcher.setPreviewInputVideoSource(0, cols[num])
+            print(f"[{time.ctime()}]  PVW Video source: " + cols[num])
+        elif msgh[1] in me:
+            num = me.index(msgh[1])
+            switcher.setTransitionStyle(0, mes[num])
+        elif msgh[1] == ftb:
+            if switcher.fadeToBlack[0].state.fullyBlack == False and switcher.fadeToBlack[0].state.inTransition:
+                switcher.execFadeToBlackME(1)
+                outport.send(Message.from_hex('91 '+ftb+' 05'))
+        elif msgh[1] == autome:
+            switcher.execAutoME(0)
+        elif msgh[1] == cutme:
+            switcher.execCutME(0)
+        elif msgh[1] in mpties:
+            num = mpties.index(msgh[1])
+            mptie[num] != mptie[num]
+            switcher.setDownstreamKeyerTie(dsks[num], mptie[num])
+        elif msgh[1] in mpairs:
+            num = mpairs.index(msgh[1])
+            mpair[num] != mpair[num]
+            switcher.setDownstreamKeyerTie(dsks[num], mpair[num])
+        elif msgh[1] in mpautos:
+            num = mpautos.index(msgh[1])
+            mpautos[num] != mpauto[num]
+            switcher.setDownstreamKeyerTie(dsks[num], mpauto[num])
         
 

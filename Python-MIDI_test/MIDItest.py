@@ -62,6 +62,8 @@ def initialize():
     print(f"[{time.ctime()}] Initializing MIDI pad...")
     #Launchpad XのProgrammer Mode化
     outport.send(Message.from_hex('F0 00 20 29 02 0C 0E 01 F7'))
+    #Launchpad XのVelocity無効化
+    outport.send(Message.from_hex('F0 00 20 29 02 0C 04 03 7F F7'))
     #Launchpad XのAftertouch無効化
     outport.send(Message.from_hex('F0 00 20 29 02 0C 0B 02 01 F7'))
     #Launchpad XのLED有効化
@@ -105,7 +107,7 @@ def Color():
         msg = Message('note_on', channel = 0, note = i + 10, velocity = i)
         outport.send(msg)
         print(f'[{time.ctime()}] {msg}')
-        time.sleep(0.02)
+        time.sleep(0.01)
 
 async def logo():
     i = 0
