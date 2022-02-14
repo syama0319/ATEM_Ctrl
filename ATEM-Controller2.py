@@ -18,11 +18,10 @@ args = parser.parse_args()
 
 #Switcherオブジェクトの生成
 switcher = PyATEMMax.ATEMMax()
-mes = 0
 
 #LaunchpadとATEMのボタン対応
-pvwin = ('33','34','35','36','37','29','2A','2B','2C','2D')
-pgmin = ('51','52','53','54','55','47','48','49','4A','4B')
+pvwin = ('33','34','35','29','2A','2B','2C')
+pgmin = ('51','52','53','47','48','49','4A')
 inputs = ('input1', 'input2', 'input3', 'input4', 'input5', 'input6', 'input7', 'input8', 'input9', 'input10')
 cols = ('black', 'colorBars', 'color1', 'color2', 'mediaPlayer1', 'mediaPlayer2')
 pvwcol = ('3B','31','2F','30','39','3A') #colは Black ColorBars Color mediaPlayer1 mediaPlayer2の順
@@ -30,16 +29,14 @@ pgmcol = ('59','4F','4D','4E','57','58')
 ftb = '45'
 cutme = '10'
 autome = '12'
-fxsty = ('19','1A','1B','1C','1D')
-fxstys = ('mix','dip','wipe','sting','dVE')
+me = ('19','1A','1B','1C','1D')
+mes = ('mix','dip','wipe','sting','dVE')
 pvwtrans = '13'
 mpties = ('15','0B') #mp1, mp2, dskで使うのはほとんどmpなのでdskとの区別のためmpと表記
 mpairs = ('16', '0C')
 mpautos = ('17', '0D')
 keyers = ('keyer1','keyer2','keyer3','keyer4')
-uskairs = [False, False, False, False]
-uskflys = [False, False, False, False]
-dsks = ("dsk1", "dsk2")
+dsks = ('dsk1', 'dsk2')
 mptie = [False, False]
 mpair = [False, False]
 mpauto = [False, False]
@@ -71,7 +68,7 @@ def defclr():
     for i in range(len(pgmcol)):
         outport.send(Message.from_hex('90 '+pvwcol[i]+' 18'))
         outport.send(Message.from_hex('90 '+pgmcol[i]+' 04'))
-    for i in fxsty:
+    for i in me:
         outport.send(Message.from_hex('90 '+ i +' 0C'))
     for i in mpties:
         outport.send(Message.from_hex('90 '+ i +' 0C'))
@@ -121,9 +118,9 @@ def syncStatus():
         num = cols.index(pvwcam)
         outport.send(Message.from_hex(f'90 {pvwcol[num]} 03'))
     
-    if style in fxstys:
-        num = fxstys.index(style)
-        outport.send(Message.from_hex(f'90 {fxsty[num]} 03'))
+    if style in mes:
+        num = mes.index(style)
+        outport.send(Message.from_hex(f'90 {me[num]} 03'))
     
     for i in range(0,1):
         if mptie[i] == True:
@@ -212,7 +209,6 @@ def initialize():
     print(f"[{time.ctime()}] Initializing MIDI pad...")
     #Launchpad XのProgrammer Mode化
     outport.send(Message.from_hex('F0 00 20 29 02 0C 0E 01 F7'))
-    outport.send(Message('clock', 48))
     #Launchpad XのVelocity無効化
     outport.send(Message.from_hex('F0 00 20 29 02 0C 04 03 7F F7'))
     #Launchpad XのAftertouch無効化
@@ -243,46 +239,45 @@ initialize()
 while True:
     msgh = inport.receive().hex().split()
     #ボタンを離したときは無視する
-    if msgh[2] == '00':
-        continue
-    if msgh[1] in pgmin:
+    if msgh[2] != '00':
+        if msgh[1] in pgmin:
             num = pgmin.index(msgh[1]) +1
             switcher.setProgramInputVideoSource(0, num)
             print(f"[{time.ctime()}]  PGM Video source: {num}")
-    elif msgh[1] in pvwin:
-        num = pvwin.index(msgh[1]) +1
-        switcher.setPreviewInputVideoSource(0, num)
-        print(f"[{time.ctime()}]  PVW Video source: {num}")
-    elif msgh[1] in pgmcol:
-        num = pgmcol.index(msgh[1])
-        switcher.setProgramInputVideoSource(0, cols[num])
-        print(f"[{time.ctime()}]  PGM Video source: " + cols[num])
-    elif msgh[1] in pvwcol:
-        num = pvwcol.index(msgh[1])
-        switcher.setPreviewInputVideoSource(0, cols[num])
-        print(f"[{time.ctime()}]  PVW Video source: " + cols[num])
-    elif msgh[1] in fxsty:
-        num = fxsty.index(msgh[1])
-        switcher.setTransitionStyle(0, fxstys[num])
-    elif msgh[1] == ftb:
-        if switcher.fadeToBlack[0].state.fullyBlack == False and switcher.fadeToBlack[0].state.inTransition:
-            switcher.execFadeToBlackME(0)
-            outport.send(Message.from_hex('91 '+ftb+' 05'))
-    elif msgh[1] == autome:
-        switcher.execAutoME(0)
-    elif msgh[1] == cutme:
-        switcher.execCutME(0)
-    elif msgh[1] in mpties:
-        num = mpties.index(msgh[1])
-        mptie[num] != mptie[num]
-        switcher.setDownstreamKeyerTie(dsks[num], mptie[num])
-    elif msgh[1] in mpairs:
-        num = mpairs.index(msgh[1])
-        mpair[num] != mpair[num]
-        switcher.setDownstreamKeyerTie(dsks[num], mpair[num])
-    elif msgh[1] in mpautos:
-        num = mpautos.index(msgh[1])
-        mpautos[num] != mpauto[num]
-        switcher.setDownstreamKeyerTie(dsks[num], mpauto[num])
+        elif msgh[1] in pvwin:
+            num = pvwin.index(msgh[1]) +1
+            switcher.setPreviewInputVideoSource(0, num)
+            print(f"[{time.ctime()}]  PVW Video source: {num}")
+        elif msgh[1] in pgmcol:
+            num = pgmcol.index(msgh[1])
+            switcher.setProgramInputVideoSource(0, cols[num])
+            print(f"[{time.ctime()}]  PGM Video source: " + cols[num])
+        elif msgh[1] in pvwcol:
+            num = pvwcol.index(msgh[1])
+            switcher.setPreviewInputVideoSource(0, cols[num])
+            print(f"[{time.ctime()}]  PVW Video source: " + cols[num])
+        elif msgh[1] in me:
+            num = me.index(msgh[1])
+            switcher.setTransitionStyle(0, mes[num])
+        elif msgh[1] == ftb:
+            if switcher.fadeToBlack[0].state.fullyBlack == False and switcher.fadeToBlack[0].state.inTransition:
+                switcher.execFadeToBlackME(1)
+                outport.send(Message.from_hex('91 '+ftb+' 05'))
+        elif msgh[1] == autome:
+            switcher.execAutoME(0)
+        elif msgh[1] == cutme:
+            switcher.execCutME(0)
+        elif msgh[1] in mpties:
+            num = mpties.index(msgh[1])
+            mptie[num] != mptie[num]
+            switcher.setDownstreamKeyerTie(dsks[num], mptie[num])
+        elif msgh[1] in mpairs:
+            num = mpairs.index(msgh[1])
+            mpair[num] != mpair[num]
+            switcher.setDownstreamKeyerTie(dsks[num], mpair[num])
+        elif msgh[1] in mpautos:
+            num = mpautos.index(msgh[1])
+            mpautos[num] != mpauto[num]
+            switcher.execDownstreamKeyerAutoKeyer(dsks[num], mpauto[num])
         
 

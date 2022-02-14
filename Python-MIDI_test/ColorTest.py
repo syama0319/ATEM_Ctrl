@@ -2,6 +2,8 @@ import mido
 import time
 import argparse
 from mido import Message
+from mido import MetaMessage
+from sqlalchemy import MetaData
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-m', '--model', help='MIDI pad model (ex: X)')
