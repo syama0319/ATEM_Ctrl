@@ -1,55 +1,62 @@
-function, value,button
-pgm1,input1,51
-pgm2,input2,52
-pgm3,input3,53
-pgm4,input4,54
-pgm5,input5,55
-pgm6,input6,47
-pgm7,input7,48
-pgm8,input8,49
-pgm9,input9,4A
-pgm10,input10,4B
-pgm mp1,mediaPlayer1,57
-pgm mp2,mediaPlayer2,58
-pgm blk,black,59
-pgm color1,color1,4D
-pgm color2,color2,4E
-pgm bars,colorBars,4F
-pvw1,input1,33
-pvw2,input2,34
-pvw3,input3,35
-pvw4,input4,36
-pvw5,input5,37
-pvw6,input6,29
-pvw7,input7,2A
-pvw8,input8,2B
-pvw9,input9,2C
-pvw10,input10,2D
-pvw mp1,mediaPlayer1,39
-pvw mp2,mediaPlayer2,3A
-pvw blk,black,3B
-pvw color1,color1,2F
-pvw color2,color2,30
-pvw bars,colorBars,31
-usk1 onair,,
-usk2 onair,,
-usk3 onair,,
-usk4 onair,,
-usk1 next,,
-usk2 next,,
-usk3 next,,
-usk4 next,,
-dsk1 tie,,15
-dsk1 onair,,16
-dsk1 auto,,17
-dsk2 tie,,0B
-dsk2 onair,,0C
-dsk2 auto,,0D
-mix,mix,19
-dip,dip,1A
-wipe,wipe,1B
-sting,sting,1C
-dve,dVE,1D
-cut,,10
-auto,,12
-preview transition,,13
+no,function,value,color,button
+0,pgm,input1,05,51
+1,pgm,input2,05,52
+2,pgm,input3,05,53
+3,pgm,input4,05,54
+4,pgm,input5,05,55
+5,pgm,input6,05,47
+6,pgm,input7,05,48
+7,pgm,input8,05,49
+8,pgm,input9,05,4A
+9,pgm,input10,05,4B
+10,pgm,mediaPlayer1,04,57
+11,pgm,mediaPlayer2,04,58
+12,pgm,black,04,59
+13,pgm,color1,04,4D
+14,pgm,color2,04,4E
+15,pgm,colorBars,04,4F
+16,pvw,input1,15,33
+17,pvw,input2,15,34
+18,pvw,input3,15,35
+19,pvw,input4,15,36
+20,pvw,input5,15,37
+21,pvw,input6,15,29
+22,pvw,input7,15,2A
+23,pvw,input8,15,2B
+24,pvw,input9,15,2C
+25,pvw,input10,15,2D
+26,pvw,mediaPlayer1,18,39
+27,pvw,mediaPlayer2,18,3A
+28,pvw,black,18,3B
+29,pvw,color1,18,2F
+30,pvw,color2,18,30
+31,pvw,colorBars,18,31
+32,usk1_onair,,05,
+33,usk2_onair,,05,
+34,usk3_onair,,05,
+35,usk4_onair,,05,
+36,bkgd_next,,0C,
+37,usk1_next,,0C,
+38,usk2_next,,0C,
+39,usk3_next,,0C,
+40,usk4_next,,0C,
+41,dsk1_tie,,0D,15
+42,dsk2_tie,,0D,0B
+43,dsk1_onair,,05,16
+44,dsk2_onair,,05,0C
+45,dsk1_auto,,05,17
+46,dsk2_auto,,05,0D
+47,transtyle,mix,0C,19
+48,transtyle,dip,0C,1A
+49,transtyle,wipe,0C,1B
+50,transtyle,sting,0C,1C
+51,transtyle,dve,0C,1D
+52,transition,cut,09,10
+53,transition,auto,09,12
+54,preview_transition,,22,13
+55,fade_to_black,,03,45
+56,profile,1,03,5B
+57,profile,2,03,5C
+58,profile,3,03,5D
+59,,,,
+60,,,,
