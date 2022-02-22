@@ -54,7 +54,7 @@ no,function,value,color,button
 52,cutme,cut,09,10
 53,autome,auto,09,12
 54,pvw_transition,mode,22,13
-55,fade_to_black,,03,45
+55,fade_to_black,ftb,03,45
 56,profile,1,03,5B
 57,profile,2,03,5C
 58,profile,3,03,5D
