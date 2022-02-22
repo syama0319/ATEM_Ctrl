@@ -143,9 +143,9 @@ def sync_status():
     pvwin = str(switchers[sw_num].previewInput[me_num].videoSource)
     transty = str(switchers[sw_num].transition[me_num].style)
     bool_auto_trans = switchers[sw_num].transition[me_num].inTransition
-    bool_pvw_trans = switchers[sw_num].transition[me_num].preview.enabled
     if switchers[sw_num].fadeToBlack[me_num].state.fullyBlack == True or switchers[sw_num].fadeToBlack[me_num].state.inTransition == True:
         bool_ftb = True
+    bool_pvw_trans = switchers[sw_num].transition[me_num].preview.enabled
     for i in key_dsk:
         bool_dsk[i][0] = switchers[sw_num].downstreamKeyer[i].tie
         bool_dsk[i][1] = switchers[sw_num].downstreamKeyer[i].onAir
@@ -162,7 +162,22 @@ def sync_status():
     outport.send(Message.from_hex('90 '+button_call[('pgm', pgmin)][0]+' 03'))
     outport.send(Message.from_hex('90 '+button_call[('pvw', old_pvwin)][0]+' '+button_call[('pvw', old_pvwin)][1]))
     outport.send(Message.from_hex('90 '+button_call[('pvw', pvwin)][0]+' 03'))
+    outport.send(Message.from_hex('90 '+button_call[('transtyle', old_transty)][0]+' '+button_call[('transtyle', old_transty)][1]))
+    outport.send(Message.from_hex('90 '+button_call[('transtyle', transty)][0]+' 03'))
+    if bool_auto_trans == True and old_bool_auto_trans == False:
+        outport.send(Message.from_hex('91 '+ button_call[('autome', 'auto')][0]+' 05'))
+    else:
+        outport.send(Message.from_hex('90 '+ button_call[('autome', 'auto')][0]+' '+button_call[('autome', 'auto')][1]))
+    
+    outport.send(Message.from_hex('90 '+button_call[('pvw_transition', 'mode')][0] +' '+bool2color(bool_pvw_trans, 'pvw_transition', 'mode')))
+    
+    if bool_ftb == True and old_bool_ftb == False:
+        outport.send(Message.from_hex('91 '+ button_call[('fade_to_black', 'ftb')][0]+' 05'))
+    else:
+        outport.send(Message.from_hex('90 '+ button_call[('fade_to_black', 'ftb')][0]+' '+button_call[('fade_to_black', 'ftb')][1]))
 
+    old_bool_auto_trans = bool_ftb
+    old_bool_ftb = bool_ftb
 
     return 'Synced.'
 
@@ -255,7 +270,7 @@ def end(num) -> None:
     outport.send(Message.from_hex('F0 00 20 29 02 0C 0B 00 01 F7'))
     #Launchpad XのVelocity有効化
     outport.send(Message.from_hex('F0 00 20 29 02 0C 04 01 F7'))
-    #Launchpad XのFader velocity toggle有効化
+    #Launchpad XのFader velocity toggle 有効化
     outport.send(Message.from_hex('F0 00 20 29 02 0C 0D 01 F7'))
     #Launchpad XのLive Mode化
     outport.send(Message.from_hex('F0 00 20 29 02 0C 0E 00 F7'))
