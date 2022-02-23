@@ -176,6 +176,10 @@ def sync_status():
     else:
         outport.send(Message.from_hex('90 '+ button_call[('fade_to_black', 'ftb')][0]+' '+button_call[('fade_to_black', 'ftb')][1]))
 
+    for i in key_usk:
+        outport.send(Message.from_hex('90 '+button_call[('usk_next', i)][0] + bool2color(bool_usk[i][1], 'usk_next', i)))
+        outport.send(Message.from_hex('90 '+button_call[('usk_next', i)][1] + bool2color(bool_usk[i][0], 'usk_onair', i)))
+
     old_bool_auto_trans = bool_ftb
     old_bool_ftb = bool_ftb
 
