@@ -138,7 +138,7 @@ except:
     atem_scan()
     atem_connect(input('Input IP address'))
 
-def sync_status():
+def sync_status() -> None:
     pgmin = str(switchers[sw_num].programInput[me_num].videoSource)
     pvwin = str(switchers[sw_num].previewInput[me_num].videoSource)
     transty = str(switchers[sw_num].transition[me_num].style)
@@ -182,8 +182,7 @@ def sync_status():
 
     old_bool_auto_trans = bool_ftb
     old_bool_ftb = bool_ftb
-
-    return 'Synced.'
+    print(f"[{time.ctime()}] MIDI pad is syncd!")
 
 ###########   Eventのログを表示   ###########
 def onConnectAttempt(params: Dict[Any, Any]) -> None:
@@ -204,7 +203,7 @@ def onDisconnect(params: Dict[Any, Any]) -> None:
 def onReceive(params: Dict[Any, Any]) -> None:
     """Called when data is received from the switchers[sw_num]"""
     print(f"[{time.ctime()}] Received [{params['cmd']}]: {params['cmdName']}")
-    print(f"[{time.ctime()}] {sync_status()}")
+    sync_status()
 
 def onWarning(params: Dict[Any, Any]) -> None:
     """Called when a warning message is received from the switchers[sw_num]"""
@@ -285,6 +284,7 @@ function = {'pgm': pgm, 'pvw': pvw, 'transtyle': transtyle, 'autome': autome, 'c
 
 set_list(1)
 initialize()
+sync_status()
 while True:
     msg = inport.receive().hex().split()
     if msg[2] == '00':
