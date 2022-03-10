@@ -7,3 +7,4 @@ profile2,list.csv
 profile3,list.csv
 MIDI input,Launchpad X LPX MIDI In
 MIDI output,Launchpad X LPX MIDI Out
+MIDIpad config,midipad-config.csv

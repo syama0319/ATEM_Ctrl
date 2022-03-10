@@ -19,6 +19,8 @@ button_list = [] #有効なボタンリスト
 profile_num = 1
 me_num = 0
 sw_num = 0
+pgmin = 'input1'
+pvwin = 'input1'
 old_pgmin = 'input1'
 old_pvwin = 'input1'
 old_transty = 'mix'
@@ -151,7 +153,8 @@ def sync_status() -> None:
         bool_dsk[i][1] = switchers[sw_num].downstreamKeyer[i].onAir
         bool_dsk[i][2] = switchers[sw_num].downstreamKeyer[i].isAutoTransitioning
     for i in key_usk:
-        bool_usk[i][0] = switchers[sw_num].keyer[me_num][i].onAir.enabled
+        if i != 'bkgd':
+            bool_usk[i][0] = switchers[sw_num].keyer[me_num][i].onAir.enabled
     bool_usk['bkgd'][1] = switchers[sw_num].transition[me_num].nextTransition.background
     bool_usk['keyer1'][1] = switchers[sw_num].transition[me_num].nextTransition.key1
     bool_usk['keyer2'][1] = switchers[sw_num].transition[me_num].nextTransition.key2
@@ -284,6 +287,7 @@ function = {'pgm': pgm, 'pvw': pvw, 'transtyle': transtyle, 'autome': autome, 'c
 
 set_list(1)
 initialize()
+print(str(switchers[sw_num].programInput[me_num].videoSource))
 sync_status()
 while True:
     msg = inport.receive().hex().split()
