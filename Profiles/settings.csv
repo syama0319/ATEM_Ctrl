@@ -1,8 +1,8 @@
-ip address 1,192.168.10.240
+ip address 1,192.168.10.239
 ip address 2,
 ip address 3,
 ip address 4,
-profile1,list.csv
+profile1,list2.csv
 profile2,list.csv
 profile3,list.csv
 MIDI input,Launchpad X LPX MIDI In
