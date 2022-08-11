@@ -143,6 +143,24 @@ except:
     atem_connect(input('Input IP address'))
 
 def sync_status() -> None:
+    #Global変数の定義
+    global switchers
+    global pgmin
+    global pvwin
+    global old_pgmin
+    global old_pvwin
+    global old_transty
+    global bool_pvw_trans
+    global bool_auto_trans
+    global bool_ftb
+    global old_bool_auto_trans
+    global old_bool_ftb
+    global bool_pvw_trans
+    global key_usk
+    global key_dsk
+    global bool_usk
+    global bool_dsk
+
     pgmin = str(switchers[sw_num].programInput[me_num].videoSource)
     pvwin = str(switchers[sw_num].previewInput[me_num].videoSource)
     transty = str(switchers[sw_num].transition[me_num].style)
@@ -193,20 +211,20 @@ def sync_status() -> None:
 def onConnectAttempt(params: Dict[Any, Any]) -> None:
     """Called when a connection is attempted"""
     outport.send(Message.from_hex('92 63 0D'))
-    print(f"[{time.ctime()}] Trying to connect to switchers[sw_num] at {params['switchers[sw_num]'].ip}")
+    print(f"[{time.ctime()}] Trying to connect to switchers[{sw_num}] at {params['switchers'].ip}")
 
 def onConnect(params: Dict[Any, Any]) -> None:
-    """Called when the switchers[sw_num] is connected"""
+    """Called when the switcher is connected"""
     outport.send(Message.from_hex('90 63 03'))
-    print(f"[{time.ctime()}] Connected to switchers[sw_num] {switchers[sw_num].atemModel} at {params['switchers[sw_num]'].ip}")
+    print(f"[{time.ctime()}] Connected to switchers[{sw_num}] {switchers[sw_num].atemModel} at {params['switchers'].ip}")
 
 def onDisconnect(params: Dict[Any, Any]) -> None:
-    """Called when the switchers[sw_num] disconnects"""
+    """Called when the switcher disconnects"""
     outport.send(Message.from_hex('91 63 05'))
-    print(f"[{time.ctime()}] DISCONNECTED from switchers[sw_num] at {params['switchers[sw_num]'].ip}")
+    print(f"[{time.ctime()}] DISCONNECTED from switchers[{sw_num}] at {params['switchers[sw_num]'].ip}")
 
 def onReceive(params: Dict[Any, Any]) -> None:
-    """Called when data is received from the switchers[sw_num]"""
+    """Called when data is received from the switcher"""
     print(f"[{time.ctime()}] Received [{params['cmd']}]: {params['cmdName']}")
     sync_status()
 

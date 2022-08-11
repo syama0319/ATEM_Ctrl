@@ -101,10 +101,6 @@ def initialize() -> None:
 ###########   ATEMへ接続   ###########
 ips = []
 switcher = PyATEMMax.ATEMMax()
-switcher1 = PyATEMMax.ATEMMax()
-switcher2 = PyATEMMax.ATEMMax()
-switcher3 = PyATEMMax.ATEMMax()
-switchers = (switcher, switcher1, switcher2, switcher3)
 
 #LAN内のATEMスキャン
 def atem_scan():
@@ -184,17 +180,16 @@ def sync_status():
     outport.send(Message.from_hex('90 '+button_call[('pvw', pvwin)][0]+' 03'))
     outport.send(Message.from_hex('90 '+button_call[('transtyle', old_transty)][0]+' '+button_call[('transtyle', old_transty)][1]))
     outport.send(Message.from_hex('90 '+button_call[('transtyle', transty)][0]+' 03'))
-    if bool_auto_trans == True:
+    if bool_auto_trans == True and old_bool_auto_trans == False:
         outport.send(Message.from_hex('91 '+ button_call[('autome', 'auto')][0]+' 05'))
-    elif bool_auto_trans == False:
+    elif bool_auto_trans == False and old_bool_auto_trans == True:
         outport.send(Message.from_hex('90 '+ button_call[('autome', 'auto')][0]+' '+button_call[('autome', 'auto')][1]))
         
-    
-    outport.send(Message.from_hex('90 '+button_call[('pvw_transition', 'mode')][0] +' '+bool2color(bool_pvw_trans, 'pvw_transition', 'mode')))
     
     old_pgmin = pgmin
     old_pvwin = pvwin
     old_transty = transty
+    old_bool_auto_trans = bool_auto_trans
 
     print(f"[{time.ctime()}] MIDI pad is syncd!")
 
@@ -236,7 +231,6 @@ print("Event Logs have been resisted!")
 def pgm(num) -> None:
     print(f'[{time.ctime()}] set PGM: {num}')
     switcher.setProgramInputVideoSource(me_num, num)
-
 def pvw(num) -> None:
     print(f'[{time.ctime()}] set PVW: {num}')
     switcher.setPreviewInputVideoSource(me_num, num)
@@ -244,11 +238,11 @@ def transtyle(num) -> None:
     print(f'[{time.ctime()}] set transition-style: {num}')
     switcher.setTransitionStyle(me_num, num)
 def autome(num) -> None:
+    switcher.execAutoME(0)
     print(f'[{time.ctime()}] exec transition: {num}')
-    switcher.execAutoME(me_num)
 def cutme(num) -> None:
+    switcher.execCutME(0)
     print(f'[{time.ctime()}] exec transition: {num}')
-    switcher.execCutME(me_num)
 def usk_onair(num) -> None:
     print(f'[{time.ctime()}] set usk_onair: {num}')
     bool_usk[num][0] = not bool_usk[num][0]
